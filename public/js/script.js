@@ -71,3 +71,33 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 });
+
+document.addEventListener("DOMContentLoaded", function() {
+    // Select the modal elements for editing a package
+    const editPackageModal = document.getElementById('editPackageModal');
+    
+    // Event listener for when the modal is shown
+    editPackageModal.addEventListener('show.bs.modal', function(event) {
+        const button = event.relatedTarget; // Button that triggered the modal
+        const packageId = button.getAttribute('data-id');
+        const packageName = button.getAttribute('data-name');
+        const packageDescription = button.getAttribute('data-description');
+        const packagePrice = button.getAttribute('data-price');
+        const packageSubjectId = button.getAttribute('data-subject_id');
+        
+        // Set the modal's input fields to the current values
+        document.getElementById('editPackageId').value = packageId;
+        document.getElementById('editPackageName').value = packageName;
+        document.getElementById('editPackageDescription').value = packageDescription;
+        document.getElementById('editPackagePrice').value = packagePrice;
+
+        // Set the selected option for the subject (which is linked to the package)
+        const packageSubjectSelect = document.getElementById('editPackageSubject');
+        for (let i = 0; i < packageSubjectSelect.options.length; i++) {
+            if (packageSubjectSelect.options[i].value == packageSubjectId) {
+                packageSubjectSelect.selectedIndex = i;
+                break;
+            }
+        }
+    });
+});

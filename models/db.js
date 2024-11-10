@@ -6,7 +6,7 @@ const pool = mysql.createPool({
   host: 'localhost',
   user: 'root',
   password: '', // Replace with your MySQL password
-  database: 'baanbm', // Replace with your MySQL database name
+  database: 'bbm', // Replace with your MySQL database name
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0
@@ -102,6 +102,52 @@ async function updateSubject(id, name, description, imgUrl, typeId) {
   }
 }
 
+async function getAllPackages () {
+  try {
+    const query = 'SELECT * FROM packages';
+    const [rows] = await pool.query(query);
+    return rows;
+  } catch (error) {
+  console.error('Error fetching packages:', error);
+  throw error;
+  }
+}
+
+async function insertPackage(subject_id, name, price, description) {
+  try {
+    const query = 'INSERT INTO packages (subject_id, name, price, description) VALUES (?, ?, ?, ?)';
+    await pool.query(query, [subject_id, name, price, description]);
+    console.log('Package inserted successfully');
+  } catch (error) {
+    console.error('Error inserting package:', error);
+    throw error;
+  }
+}
+
+// Delete packages by their IDs
+async function deletePackagesByIds(ids) {
+  try {
+    const query = 'DELETE FROM packages WHERE id IN (?)';
+    await pool.query(query, [ids]);
+    console.log(`Successfully deleted packages with IDs: ${ids}`);
+  } catch (error) {
+    console.error('Error deleting packages:', error);
+    throw error;
+  }
+}
+
+// Update a package
+async function updatePackage(id, subject_id, name, price, description) {
+  try {
+    const query = 'UPDATE packages SET subject_id = ?, name = ?, price = ?, description = ? WHERE id = ?';
+    await pool.query(query, [subject_id, name, price, description, id]);
+    console.log(`Package with ID ${id} updated successfully.`);
+  } catch (error) {
+    console.error('Error updating package:', error);
+    throw error;
+  }
+}
+ 
 module.exports = { 
   getAllSubjectTypes, 
   deleteSubjectTypesByIds,
@@ -110,5 +156,9 @@ module.exports = {
   getAllSubjects,
   insertSubject,
   deleteSubjectsByIds,
-  updateSubject
+  updateSubject,
+  getAllPackages,
+  insertPackage,
+  deletePackagesByIds,
+  updatePackage
 };
