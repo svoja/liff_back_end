@@ -12,9 +12,6 @@ exports.getAllPackages = async (req, res) => {
       subject.packages = packages.filter(pkg => pkg.subject_id === subject.id);
     });
 
-    // Log the subjects with their attached packages for debugging
-    console.log('Subjects with packages:', subjects);
-
     res.render('users/home', { 
       title: "BBM", 
       packages: packages,
