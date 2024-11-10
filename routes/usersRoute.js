@@ -1,10 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const usersController = require('../controllers/usersController');
 
-// Users route
-router.get('/', (req, res) => {
-  console.log("Users route hit");  // Log to check if route is reached
-  res.render('users/home', { title: 'BBM | Home' });
-});
+router.get('/', usersController.getAllUsersData);
 
 module.exports = router;

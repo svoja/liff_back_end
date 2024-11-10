@@ -18,11 +18,15 @@ const subjectTypesRoute = require('./routes/subjectTypesRoute');
 const subjectsRoute = require('./routes/subjectsRoute');
 const packagesRoute = require('./routes/packagesRoute');
 
+const usersRoute = require('./routes/usersRoute');
+
 // Mount the routes
 app.use('/admin', adminRoute);
 app.use('/admin/types', subjectTypesRoute);
 app.use('/admin/subjects',  subjectsRoute);
 app.use('/admin/packages', packagesRoute);
+
+app.use('/', usersRoute);
 
 // Define the server port
 const PORT = process.env.PORT || 3000;
