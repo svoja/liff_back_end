@@ -9,30 +9,28 @@
 <body>
     <div class="container my-5">
         <h1 class="mb-5">รายการคอร์ส</h1>
-        
-        <!-- Packages and Subjects Section -->
-        <div class="row">
-            <div class="col-12 col-md-4 mb-3">
-                <h3>Packages</h3>
-                <ul class="list-group">
-                    <% packages.forEach(function(package) { %>
-                        <li class="list-group-item">
-                            <%= package.name %> - <%= package.price %>
-                        </li>
-                    <% }); %>
-                </ul>
-            </div>
 
-            <div class="col-12 col-md-4 mb-3">
-                <h3>Subjects</h3>
-                <ul class="list-group">
-                    <% subjects.forEach(function(subject) { %>
-                        <li class="list-group-item">
-                            <%= subject.name %>
-                        </li>
-                    <% }); %>
-                </ul>
-            </div>
+        <!-- Subjects Section -->
+        <div class="row">
+            <% subjects.forEach(function(subject) { %>
+                <div class="col-12 col-md-6 mb-3">
+                    <h3><%= subject.name %></h3>
+                    
+                    <!-- Available Packages for each subject -->
+                    <h5>Available Packages:</h5>
+                    <% if (subject.packages && subject.packages.length > 0) { %>
+                        <ul class="list-group">
+                            <% subject.packages.forEach(function(package) { %>
+                                <li class="list-group-item">
+                                    <%= package.name %> - <%= package.price %> บาท
+                                </li>
+                            <% }); %>
+                        </ul>
+                    <% } else { %>
+                        <p>No packages available for this subject.</p>
+                    <% } %>
+                </div>
+            <% }); %>
         </div>
     </div>
 
