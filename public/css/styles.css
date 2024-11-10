@@ -1,0 +1,3 @@
+th, td, td.text-center {
+    vertical-align: middle; /* Vertically center everything inside the cell */
+}
