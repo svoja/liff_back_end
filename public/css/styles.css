@@ -38,3 +38,9 @@ th, td, td.text-center {
     text-align: center;
     border-radius: 10px;
 }
+
+.justified-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
