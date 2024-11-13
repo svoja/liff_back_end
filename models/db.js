@@ -147,7 +147,19 @@ async function updatePackage(id, subject_id, name, price, description) {
     throw error;
   }
 }
- 
+
+// Function to get packages by subject ID
+async function getPackagesBySubjectId(subjectId) {
+  try {
+    const query = 'SELECT * FROM packages WHERE subject_id = ?';
+    const [rows] = await pool.query(query, [subjectId]);
+    return rows;
+  } catch (error) {
+    console.error(`Error fetching packages for subject ID ${subjectId}:`, error);
+    throw error;
+  }
+}
+
 module.exports = { 
   getAllSubjectTypes, 
   deleteSubjectTypesByIds,
@@ -160,5 +172,6 @@ module.exports = {
   getAllPackages,
   insertPackage,
   deletePackagesByIds,
-  updatePackage
+  updatePackage,
+  getPackagesBySubjectId
 };

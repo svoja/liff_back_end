@@ -13,32 +13,31 @@
         <div class="row">
             <% subjects.forEach(function(subject) { %>
                 <div class="col-12 col-md-4">
-                    <div class="card mb-3" data-bs-toggle="modal" data-bs-target="#<%= subject.id %>Modal">
-                        <!-- Subject Image (Placeholder if not available) -->
-                        <% if (subject.img_url) { %>
-                            <img src="<%= subject.img_url %>" class="card-img" alt="<%= subject.name %>">
-                        <% } else { %>
-                            <div class="card-placeholder">
-                                <p>No Image</p>
+                    <a href="/<%= subject.id %>" class="text-decoration-none">
+                        <div class="card mb-3">
+                            <% if (subject.img_url) { %>
+                                <img src="<%= subject.img_url %>" class="card-img" alt="<%= subject.name %>">
+                            <% } else { %>
+                                <div class="card-placeholder">
+                                    <p>No Image</p>
+                                </div>
+                            <% } %>
+                            <div class="card-img-overlay">
+                                <h1 class="card-title text-white"><%= subject.name %></h1>
+                                <footer class="position-absolute bottom-0 start-0 w-100 p-2">
+                                    <% if (subject.packages && subject.packages.length > 0) { %>
+                                        <% subject.packages.forEach(function(package) { %>
+                                            <span class="badge text-bg-primary">
+                                                <%= package.description %>
+                                            </span>
+                                        <% }); %>
+                                    <% } else { %>
+                                        <span class="badge text-bg-danger">ไม่พบแพ๊กเกจ</span>
+                                    <% } %>
+                                </footer>
                             </div>
-                        <% } %>
-    
-                        <div class="card-img-overlay">
-                            <h1 class="card-title text-white"><%= subject.name %></h1>
-                            <footer class="position-absolute bottom-0 start-0 w-100 p-2">
-                                <% if (subject.packages && subject.packages.length > 0) { %>
-                                    <% subject.packages.forEach(function(package) { %>
-                                        <span class="badge text-bg-primary">
-                                            <%= package.description %>
-                                        </span>
-                                    <% }); %>
-                                <% } else { %>
-                                    <span class="badge text-bg-danger">ไม่พบแพ๊กเกจ</span>
-                                <% } %>
-                            </footer>
                         </div>
-                        
-                    </div>
+                    </a>
                 </div>
             <% }); %>
         </div>
