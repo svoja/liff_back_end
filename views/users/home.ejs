@@ -1,48 +1,194 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= title %></title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
-    <link href="/css/styles.css" rel="stylesheet">
-</head>
-<body>
+<%- include('../partials/header') %>
 
-    <div class="container mt-3">
-        <div class="row">
-            <% subjects.forEach(function(subject) { %>
-                <div class="col-12 col-md-4">
-                    <a href="/<%= subject.id %>" class="text-decoration-none">
-                        <div class="card mb-3">
-                            <% if (subject.img_url) { %>
-                                <img src="<%= subject.img_url %>" class="card-img" alt="<%= subject.name %>">
-                            <% } else { %>
-                                <div class="card-placeholder">
-                                    <p>No Image</p>
-                                </div>
-                            <% } %>
-                            <div class="card-img-overlay">
-                                <h1 class="card-title text-white"><%= subject.name %></h1>
-                                <footer class="position-absolute bottom-0 start-0 w-100 p-2">
-                                    <% if (subject.packages && subject.packages.length > 0) { %>
-                                        <% subject.packages.forEach(function(package) { %>
-                                            <span class="badge text-bg-primary">
-                                                <%= package.description %>
-                                            </span>
-                                        <% }); %>
-                                    <% } else { %>
-                                        <span class="badge text-bg-danger">ไม่พบแพ๊กเกจ</span>
-                                    <% } %>
-                                </footer>
+<div class="container my-5">
+<div class="row">
+    <% subjects.forEach(function(subject) { %>
+      <div class="col-12 col-md-4">
+        <a href="#" data-bs-toggle="modal" data-bs-target="#subjectModal<%= subject.id %>" class="text-decoration-none">
+          <div class="card mb-3">
+            <% if (subject.img_url) { %>
+              <img src="<%= subject.img_url %>" class="card-img" alt="<%= subject.name %>">
+            <% } else { %>
+              <div class="card-placeholder">
+                <p>No Image</p>
+              </div>
+            <% } %>
+            <div class="card-img-overlay">
+              <h1 class="card-title text-white"><%= subject.name %></h1>
+              <footer class="position-absolute bottom-0 start-0 w-100 p-2">
+                <% if (subject.packages && subject.packages.length > 0) { %>
+                  <% subject.packages.forEach(function(pkg) { %>
+                    <span class="badge text-bg-primary">
+                      <%= pkg.description %>
+                    </span>
+                  <% }); %>
+                <% } else { %>
+                  <span class="badge text-bg-danger">No Packages Available</span>
+                <% } %>
+              </footer>
+            </div>
+          </div>
+        </a>
+      </div>
+    <% }); %>
+</div>  
+
+<!-- Modals for Subject's Packages -->
+<% subjects.forEach(function(subject, index) { %>
+    <div class="modal fade" id="subjectModal<%= subject.id %>" tabindex="-1" aria-labelledby="subjectModalLabel<%= subject.id %>" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-body p-0">
+                    <div class="position-relative text-center">
+                        <% if (subject.img_url) { %>
+                            <img src="<%= subject.img_url %>" alt="<%= subject.name %>" class="img-fluid" style="width: 100%; height: 250px; object-fit: cover;">
+                        <% } else { %>
+                            <div style="height: 250px; background: #ccc; display: flex; justify-content: center; align-items: center;">
+                                <p class="text-dark">No Image Available</p>
                             </div>
+                        <% } %>
+                        <div class="position-absolute bottom-0 start-0 w-100 text-center text-white" style="background: rgba(0, 0, 0, 0.6); padding: 10px;">
+                            <h1 class="fw-bold m-0"><%= subject.name %></h1>
                         </div>
-                    </a>
+                    </div>
+
+                    <!-- Description and Packages -->
+                    <div class="p-4">
+                        <!-- Description Section -->
+                        <div>
+                            <h6 class="fw-bold mb-3">คำอธิบาย</h6>
+                            <p><%= subject.description || "ไม่มีคำอธิบาย" %></p>
+                        </div>
+
+                        <!-- Package Selection -->
+                        <div class="mt-4">
+                            <h6 class="fw-bold mb-3">เลือกแพ็คเกจ</h6>
+                            <form id="packageForm<%= index %>">
+                                <div class="row">
+                                    <% if (subject.packages && subject.packages.length > 0) { %>
+                                        <% subject.packages.forEach((pkg, pkgIndex) => { %>
+                                            <div class="col-12 mb-3">
+                                                <label class="d-flex align-items-center p-3 border rounded package-option shadow-sm" 
+                                                    for="package<%= subject.id %>_<%= pkgIndex %>" 
+                                                    style="cursor: pointer; transition: all 0.3s ease-in-out;">
+                                                    <div class="d-flex flex-grow-1 align-items-center">
+                                                        <input type="radio" name="packageSelection<%= index %>" id="package<%= subject.id %>_<%= pkgIndex %>" 
+                                                            value="<%= pkg.name %>" class="form-check-input me-3" onchange="selectPackage(this, <%= index %>, <%= pkgIndex %>)" 
+                                                            aria-labelledby="package<%= subject.id %>_<%= pkgIndex %>Label">
+                                                        <div>
+                                                            <h6 class="mb-0" id="package<%= subject.id %>_<%= pkgIndex %>Label"><%= pkg.name %></h6>
+                                                        </div>
+                                                    </div>
+                                                    <div class="text-end">
+                                                        <small class="text-muted">ราคา ฿<%= pkg.price %></small>
+                                                    </div>
+                                                </label>
+                                            </div>
+                                        <% }) %>
+                                    <% } else { %>
+                                        <div class="col-12 text-center">
+                                            <p class="text-muted">ไม่มีแพ็คเกจ</p>
+                                        </div>
+                                    <% } %>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Package Description Display -->
+                        <div class="mt-3" id="packageDescription<%= subject.id %>" style="display: none;">
+                            <h6 class="fw-bold">คำอธิบายของแพ็คเกจ</h6>
+                            <p class="text-muted">กรุณาเลือกแพ็คเกจเพื่อดูรายละเอียด</p>
+                        </div>
+
+                        <!-- Age Selection -->
+                        <div class="mt-4">
+                            <h6 class="fw-bold mb-3">กรอกอายุ</h6>
+                            <input type="number" class="form-control" id="ageSelection<%= subject.id %>" min="5" max="16" placeholder="อายุ (ปี)">
+                        </div>
+
+                        <!-- Gender Selection -->
+                        <div class="mt-4">
+                            <h6 class="fw-bold mb-3">เลือกเพศ</h6>
+                            <select class="form-select" id="genderSelection<%= subject.id %>">
+                                <option value="male">ชาย</option>
+                                <option value="female">หญิง</option>
+                                <option value="other">อื่น ๆ</option>
+                            </select>
+                        </div>
+
+                        <!-- Date Selection -->
+                        <div class="mt-4">
+                            <h6 class="fw-bold mb-3">เลือกเวลาที่ต้องการ</h6>
+                            <select class="form-select" id="dateSelection<%= subject.id %>">
+                                <option value="sat-sun-09-17">เสาร์ - อาทิตย์ 09:00 - 17:00</option>
+                                <option value="tue-fri-16-18">อังคาร - ศุกร์ 16:00 - 18:00</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
-            <% }); %>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                    <button type="button" class="btn btn-primary" onclick="confirmSelection(<%= subject.id %>)">ยืนยัน</button>
+                </div>
+            </div>
         </div>
     </div>
-    
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-</body>
-</html>
+<% }); %>
+</div>
+
+<%- include('../partials/footer') %>
+
+<script>
+    const subjectsData = <%- JSON.stringify(subjects) %>;  // Pass subjects from EJS to JS
+
+    function selectPackage(radio, subjectIndex, pkgIndex) {
+        // Reset all packages to remove yellow border
+        document.querySelectorAll('.package-option').forEach(option => {
+            option.classList.remove('border-warning');
+        });
+
+        // Add yellow border to the selected package
+        const label = radio.closest('.package-option');
+        label.classList.add('border-warning');
+
+        // Get the selected package's description
+        const selectedPackage = subjectsData[subjectIndex].packages[pkgIndex];
+
+        // Update the description section in the modal
+        const descriptionElement = document.getElementById(`packageDescription${subjectsData[subjectIndex].id}`);
+        if (selectedPackage && selectedPackage.description) {
+            descriptionElement.innerHTML = `
+                <h6 class="fw-bold">คำอธิบายของแพ็คเกจ</h6>
+                <p class="text-muted">${selectedPackage.description}</p>
+            `;
+        } else {
+            descriptionElement.innerHTML = `
+                <h6 class="fw-bold">คำอธิบายของแพ็คเกจ</h6>
+                <p class="text-muted">ไม่มีคำอธิบาย</p>
+            `;
+        }
+
+        // Show the description block
+        descriptionElement.style.display = 'block';
+    }
+
+    function confirmSelection(subjectId) {
+        const selectedPackage = document.querySelector(`input[name="packageSelection${subjectId}"]:checked`);
+        const ageSelection = document.getElementById(`ageSelection${subjectId}`);
+        const dateSelection = document.getElementById(`dateSelection${subjectId}`);
+        
+        // Validate selections
+        if (!selectedPackage) {
+            alert('กรุณาเลือกแพ็คเกจ');
+            return;
+        }
+
+        if (!ageSelection.value || ageSelection.value < 5 || ageSelection.value > 16) {
+            alert('กรุณากรอกอายุที่ถูกต้อง');
+            return;
+        }
+
+        // You can handle the confirmed selection here (e.g., send data to the server)
+        alert('การเลือกเสร็จสมบูรณ์');
+    }
+</script>
